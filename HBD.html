@@ -1,0 +1,2104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Jhurine 💙</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Fredoka:wght@400;600&family=Noto+Sans+KR:wght@300;500&family=Quicksand:wght@500;700&display=swap');
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    background:
+        radial-gradient(circle at 50% 30%,rgba(20,35,75,.7) 0%,transparent 70%),
+        radial-gradient(circle at 15% 20%,rgba(30,60,110,.3) 0%,transparent 40%),
+        radial-gradient(circle at 85% 20%,rgba(30,60,110,.3) 0%,transparent 40%),
+        linear-gradient(to bottom,#060a12 0%,#0c1424 50%,#060b17 80%,#020408 100%);
+    height:100vh;
+    width:100vw;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+    font-family:'Fredoka',sans-serif;
+    position:relative;
+}
+
+body:before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+        radial-gradient(ellipse at 20% 0%,rgba(60,100,180,.15) 0%,transparent 60%),
+        radial-gradient(ellipse at 80% 0%,rgba(60,100,180,.15) 0%,transparent 60%);
+    pointer-events:none;
+    z-index:1;
+}
+
+#wave-canvas{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+    z-index:2;
+}
+
+#korean-container{
+    position:fixed;
+    width:100vw;
+    height:100vh;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:10;
+}
+
+.korean-word{
+    position:absolute;
+    font-family:'Noto Sans KR',sans-serif;
+    color:rgba(147,180,230,.8);
+    white-space:nowrap;
+    user-select:none;
+    animation:floatAndFade 5s ease-out forwards;
+    text-shadow:0 0 10px rgba(45,95,175,.8);
+}
+
+#play-btn{
+    padding:16px 52px;
+    font-size:24px;
+    font-weight:bold;
+    background:#121a2d;
+    color:#60a5fa;
+    border:2px solid #2563eb;
+    border-radius:50px;
+    cursor:pointer;
+    box-shadow:0 0 25px rgba(37,99,235,.3);
+    transition:.25s;
+    z-index:20;
+    font-family:'Fredoka',sans-serif;
+}
+
+#play-btn:hover{
+    transform:scale(1.08);
+    box-shadow:0 0 35px rgba(37,99,235,.6);
+}
+
+#watermark{
+    font-family:'Dancing Script',cursive;
+    color:#3b82f6;
+    font-size:8rem;
+    opacity:0;
+    position:absolute;
+    pointer-events:none;
+    text-shadow:0 0 25px rgba(59,130,246,.7);
+    transform:scale(.8);
+    z-index:5;
+}
+
+.content-screen{
+    position:absolute;
+    inset:0;
+    background:rgba(8,14,26,.8);
+    backdrop-filter:blur(8px);
+    z-index:15;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    opacity:0;
+    pointer-events:none;
+    color:white;
+    text-align:center;
+    padding:20px;
+    overflow:hidden;
+    transition:opacity 1.2s,transform 1s;
+    transform:scale(.98);
+}
+
+.content-screen.active{
+    opacity:1;
+    transform:scale(1);
+    pointer-events:auto;
+}
+
+.content-screen.fade-out{
+    opacity:0;
+    transform:scale(1.02);
+    pointer-events:none;
+}
+
+.greeting-container{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    max-width:600px;
+    width:100%;
+}
+
+.greeting-container h1{
+    font-family:'Dancing Script',cursive;
+    font-size:4.5rem;
+    margin-bottom:20px;
+    color:#60a5fa;
+    text-shadow:0 0 20px rgba(96,165,250,.5);
+}
+
+.greeting-container p{
+    font-size:1.35rem;
+    max-width:520px;
+    line-height:1.6;
+    color:#cbd5e1;
+    margin:0 auto 25px;
+}
+
+.dots-loader{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+}
+
+.dots-loader span{
+    width:12px;
+    height:12px;
+    background:#3b82f6;
+    border-radius:50%;
+    display:inline-block;
+    animation:bounceDots 1.4s infinite ease-in-out both;
+    box-shadow:0 0 10px rgba(59,130,246,.6);
+}
+
+.dots-loader span:nth-child(1){animation-delay:-.32s}
+.dots-loader span:nth-child(2){animation-delay:-.16s}
+
+.password-card{
+    background:rgba(15,23,42,.95);
+    padding:35px 30px;
+    border-radius:28px;
+    box-shadow:0 12px 35px rgba(0,0,0,.7),0 0 20px rgba(37,99,235,.25);
+    max-width:380px;
+    width:90%;
+    color:#f1f5f9;
+    border:2px solid #2563eb;
+    position:relative;
+    z-index:25;
+}
+
+.lock-icon{
+    font-size:2.5rem;
+    margin-bottom:8px;
+    display:inline-block;
+    animation:pulseCute 2s infinite;
+}
+
+.password-card h2{
+    font-size:1.6rem;
+    margin-bottom:6px;
+    color:#93c5fd;
+}
+
+.password-card p{
+    font-size:.95rem;
+    color:#94a3b8;
+    margin-bottom:20px;
+}
+
+.input-group{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    align-items:center;
+}
+
+.pwd-input{
+    width:100%;
+    padding:14px;
+    font-size:1.4rem;
+    letter-spacing:4px;
+    text-align:center;
+    border:2px solid #1e3a8a;
+    border-radius:20px;
+    outline:none;
+    color:#f8fafc;
+    background:#0f172a;
+    font-family:'Fredoka',sans-serif;
+}
+
+.pwd-input:focus{
+    border-color:#3b82f6;
+    transform:scale(1.02);
+    box-shadow:0 0 15px rgba(59,130,246,.3);
+}
+
+.pwd-btn,
+.action-btn{
+    background:#1d4ed8;
+    color:#f0f9ff;
+    border:none;
+    cursor:pointer;
+    font-family:'Fredoka',sans-serif;
+    box-shadow:0 4px 15px rgba(29,78,216,.4);
+}
+
+.pwd-btn{
+    width:100%;
+    padding:12px;
+    font-size:1.1rem;
+    font-weight:600;
+    border-radius:20px;
+}
+
+.pwd-btn:hover,
+.action-btn:hover{
+    background:#1e40af;
+    transform:translateY(-2px);
+}
+
+#error-msg{
+    color:#f87171;
+    font-size:.9rem;
+    margin-top:10px;
+    min-height:20px;
+    font-weight:600;
+}
+
+.top-left-back-btn{
+    position:fixed;
+    top:25px;
+    left:25px;
+    z-index:200;
+    background:#1d4ed8;
+    color:#f0f9ff;
+    border:2px solid #3b82f6;
+    padding:12px 22px;
+    font-size:1rem;
+    font-weight:600;
+    border-radius:25px;
+    cursor:pointer;
+    box-shadow:0 4px 15px rgba(0,0,0,.4);
+    font-family:'Fredoka',sans-serif;
+    display:none;
+    align-items:center;
+    gap:8px;
+}
+
+.top-left-back-btn:hover{
+    background:#1e40af;
+    transform:translateY(-2px) scale(1.03);
+}
+
+.envelope-wrapper{
+    display:none;
+    position:relative;
+    width:340px;
+    height:230px;
+    background:#172554;
+    border-bottom-left-radius:12px;
+    border-bottom-right-radius:12px;
+    box-shadow:0 15px 35px rgba(0,0,0,.7),0 0 25px rgba(30,58,138,.3);
+    cursor:pointer;
+    margin:auto;
+    z-index:25;
+    border:1px solid #1e40af;
+}
+
+.envelope-wrapper.active{
+    display:block;
+    animation:bounceIn .8s cubic-bezier(.175,.885,.32,1.275) forwards;
+}
+
+.envelope-flap{
+    position:absolute;
+    top:0;
+    left:0;
+    width:0;
+    height:0;
+    border-left:170px solid transparent;
+    border-right:170px solid transparent;
+    border-top:125px solid #1e3a8a;
+    transform-origin:top;
+    transition:transform .6s ease .2s,z-index .2s .4s;
+    z-index:5;
+}
+
+.envelope-wrapper.open .envelope-flap{
+    transform:rotateX(180deg);
+    z-index:1;
+}
+
+.envelope-pocket{
+    position:absolute;
+    bottom:0;
+    left:0;
+    width:0;
+    height:0;
+    border-left:170px solid #0f172a;
+    border-right:170px solid #0f172a;
+    border-bottom:115px solid #020617;
+    z-index:4;
+}
+
+.heart-seal{
+    position:absolute;
+    top:100px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:2rem;
+    z-index:6;
+    transition:.4s;
+}
+
+.envelope-wrapper.open .heart-seal{
+    opacity:0;
+    pointer-events:none;
+}
+
+.vintage-paper{
+    position:absolute;
+    top:10px;
+    left:15px;
+    width:310px;
+    height:210px;
+    background:rgba(26,38,66,.94);
+    backdrop-filter:blur(12px);
+    border-radius:26px;
+    border:2px solid rgba(59,130,246,.4);
+    padding:25px 20px;
+    transition:all .7s cubic-bezier(.25,1,.5,1) .3s;
+    z-index:2;
+    overflow:hidden;
+    color:#dbeafe;
+    text-align:left;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    filter:drop-shadow(0 10px 25px rgba(0,0,0,.5));
+}
+
+.envelope-wrapper.open .vintage-paper{
+    position:fixed!important;
+    top:50%!important;
+    left:50%!important;
+    transform:translate(-50%,-50%)!important;
+    width:90vw!important;
+    max-width:900px!important;
+    height:80vh!important;
+    max-height:750px!important;
+    z-index:100!important;
+    padding:45px 50px!important;
+    filter:
+        drop-shadow(0 20px 40px rgba(0,0,0,.7))
+        drop-shadow(0 0 30px rgba(37,99,235,.3))!important;
+}
+
+.paper-content{
+    font-family:'Quicksand',sans-serif;
+    font-size:1.25rem;
+    line-height:1.75;
+    color:#e0f2fe;
+    font-weight:600;
+    outline:none;
+    position:relative;
+    flex:1;
+    width:100%;
+    min-height:0;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    text-align:left;
+    padding:5px 10px;
+}
+
+#letter-pages{
+    position:relative;
+    flex:1;
+    min-height:0;
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+}
+
+.letter-page{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:10px 15px 20px;
+    opacity:0;
+    transform:translateX(35px);
+    pointer-events:none;
+    transition:opacity .45s ease,transform .45s ease;
+    white-space:pre-wrap;
+    overflow:hidden;
+}
+
+.letter-page.active{
+    opacity:1;
+    transform:translateX(0);
+    pointer-events:auto;
+}
+
+.letter-page.exit-left{
+    opacity:0;
+    transform:translateX(-35px);
+}
+
+.letter-navigation{
+    flex-shrink:0;
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:8px 5px 0;
+    z-index:5;
+}
+
+.tap-indicator{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    color:#93c5fd;
+    font-size:.9rem;
+    font-weight:600;
+    animation:tapPulse 1.6s infinite ease-in-out;
+    user-select:none;
+}
+
+.tap-hand{
+    display:inline-block;
+    font-size:1.25rem;
+    animation:tapBounce 1.2s infinite ease-in-out;
+}
+
+.page-counter{
+    color:#64748b;
+    font-size:.8rem;
+    white-space:nowrap;
+}
+
+.next-letter-btn{
+    background:#1d4ed8;
+    color:#f0f9ff;
+    border:2px solid #3b82f6;
+    border-radius:20px;
+    padding:8px 18px;
+    font-family:'Fredoka',sans-serif;
+    font-weight:600;
+    cursor:pointer;
+    box-shadow:0 4px 12px rgba(29,78,216,.3);
+    transition:.2s;
+    white-space:nowrap;
+}
+
+.next-letter-btn:hover{
+    background:#1e40af;
+    transform:translateY(-2px);
+}
+
+.next-letter-btn:active{
+    transform:scale(.96);
+}
+
+.next-letter-btn.finished{
+    background:#172554;
+    border-color:#2563eb;
+}
+
+.paper-footer-controls{
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+    gap:15px;
+    z-index:110;
+    margin-top:10px;
+}
+
+.wax-seal{
+    width:48px;
+    height:48px;
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+    border-radius:50%;
+    box-shadow:0 4px 15px rgba(29,78,216,.4);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    font-size:1.3rem;
+    font-weight:bold;
+    border:2px solid #60a5fa;
+    user-select:none;
+}
+
+.action-btn{
+    padding:10px 20px;
+    font-size:.95rem;
+    font-weight:600;
+    border-radius:20px;
+}
+
+.cartoon-character{
+    position:fixed;
+    z-index:300;
+    pointer-events:auto;
+    user-select:none;
+    filter:drop-shadow(0 6px 15px rgba(0,0,0,.5));
+    cursor:grab;
+    width:80px;
+    height:80px;
+}
+
+.cartoon-character:active{
+    cursor:grabbing;
+}
+
+#char-puppy{
+    top:12%;
+    left:8%;
+    animation:floatRotate1 8s infinite ease-in-out;
+}
+
+#char-bear{
+    top:20%;
+    right:10%;
+    animation:floatRotate2 10s infinite ease-in-out;
+}
+
+#char-cat{
+    bottom:12%;
+    left:12%;
+    animation:floatRotate3 9s infinite ease-in-out;
+}
+
+#char-bunny{
+    bottom:15%;
+    right:8%;
+    animation:floatRotate4 11s infinite ease-in-out;
+}
+
+#char-star{
+    top:50%;
+    left:4%;
+    animation:floatRotate1 7s infinite ease-in-out;
+}
+
+.ember{
+    position:absolute;
+    width:6px;
+    height:6px;
+    background:#60a5fa;
+    border-radius:50%;
+    box-shadow:0 0 10px #3b82f6,0 0 15px #1d4ed8;
+    pointer-events:none;
+    z-index:105;
+    animation:floatEmber 4s ease-in infinite;
+}
+
+.shake{
+    animation:shake .4s ease-in-out;
+}
+
+@keyframes bounceDots{
+    0%,80%,100%{
+        transform:scale(0);
+        opacity:.3;
+    }
+    40%{
+        transform:scale(1);
+        opacity:1;
+    }
+}
+
+@keyframes pulseCute{
+    0%,100%{transform:scale(1)}
+    50%{transform:scale(1.12)}
+}
+
+@keyframes shake{
+    0%,100%{transform:translateX(0)}
+    20%,60%{transform:translateX(-10px)}
+    40%,80%{transform:translateX(10px)}
+}
+
+@keyframes bounceIn{
+    0%{
+        opacity:0;
+        transform:scale(.3);
+    }
+    50%{
+        opacity:.9;
+        transform:scale(1.08);
+    }
+    70%{
+        transform:scale(.95);
+    }
+    100%{
+        opacity:1;
+        transform:scale(1);
+    }
+}
+
+@keyframes floatAndFade{
+    0%{
+        opacity:0;
+        transform:translateY(20px) scale(.95);
+    }
+    20%{opacity:.85}
+    80%{opacity:.85}
+    100%{
+        opacity:0;
+        transform:translateY(-40px) scale(1.05);
+    }
+}
+
+@keyframes floatEmber{
+    0%{
+        transform:translateY(0) scale(1);
+        opacity:0;
+    }
+    20%{opacity:.8}
+    80%{opacity:.7}
+    100%{
+        transform:translateY(-120px) translateX(15px) scale(.2);
+        opacity:0;
+    }
+}
+
+@keyframes floatRotate1{
+    0%{transform:translateY(0) rotate(0) scale(1)}
+    25%{transform:translateY(-18px) translateX(10px) rotate(90deg) scale(1.05)}
+    50%{transform:translateY(-5px) translateX(-8px) rotate(180deg) scale(.98)}
+    75%{transform:translateY(15px) translateX(12px) rotate(270deg) scale(1.03)}
+    100%{transform:translateY(0) rotate(360deg) scale(1)}
+}
+
+@keyframes floatRotate2{
+    0%{transform:translateY(0) rotate(0) scale(1)}
+    30%{transform:translateY(20px) translateX(-15px) rotate(-120deg) scale(.95)}
+    60%{transform:translateY(-12px) translateX(10px) rotate(-240deg) scale(1.06)}
+    100%{transform:translateY(0) rotate(-360deg) scale(1)}
+}
+
+@keyframes floatRotate3{
+    0%{transform:translateY(0) rotate(0)}
+    50%{transform:translateY(-25px) translateX(20px) rotate(180deg)}
+    100%{transform:translateY(0) rotate(360deg)}
+}
+
+@keyframes floatRotate4{
+    0%{transform:translateY(0) rotate(0)}
+    40%{transform:translateY(18px) translateX(-20px) rotate(-150deg)}
+    80%{transform:translateY(-15px) translateX(10px) rotate(-300deg)}
+    100%{transform:translateY(0) rotate(-360deg)}
+}
+
+@keyframes fadeIn{
+    0%{
+        opacity:0;
+        transform:scale(.8);
+    }
+    100%{
+        opacity:.4;
+        transform:scale(1);
+    }
+}
+
+@keyframes bounceOut{
+    0%{
+        opacity:.4;
+        transform:scale(1);
+    }
+    30%{
+        opacity:.7;
+        transform:scale(1.2);
+    }
+    100%{
+        opacity:0;
+        transform:scale(0);
+    }
+}
+
+@keyframes tapPulse{
+    0%,100%{opacity:.65}
+    50%{opacity:1}
+}
+
+@keyframes tapBounce{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-5px)}
+}
+
+@media(max-width:768px){
+
+    #watermark{
+        font-size:4.5rem;
+    }
+
+    .greeting-container h1{
+        font-size:3rem;
+    }
+
+    .greeting-container p{
+        font-size:1.1rem;
+    }
+
+    .envelope-wrapper.open .vintage-paper{
+        width:92vw!important;
+        height:85vh!important;
+        padding:30px 20px!important;
+    }
+
+    .paper-content{
+        font-size:1.05rem;
+        line-height:1.6;
+    }
+
+    .tap-indicator{
+        font-size:.76rem;
+    }
+
+    .next-letter-btn{
+        padding:7px 12px;
+        font-size:.8rem;
+    }
+
+    .top-left-back-btn{
+        top:15px;
+        left:15px;
+        padding:10px 16px;
+        font-size:.85rem;
+    }
+
+    .wax-seal{
+        width:38px;
+        height:38px;
+        font-size:1rem;
+    }
+
+    .cartoon-character{
+        width:55px;
+        height:55px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- BACKGROUND MUSIC SOURCE -->
+<audio id="bg-music" src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3" preload="auto" loop></audio>
+
+<button id="back-btn" class="top-left-back-btn">
+    🔙 Back to Password
+</button>
+
+<canvas id="wave-canvas"></canvas>
+
+<div id="korean-container"></div>
+
+<button id="play-btn">▶ Play</button>
+
+<div id="watermark">To Jhurine</div>
+
+<!-- PUPPY -->
+<svg id="char-puppy" class="cartoon-character" viewBox="0 0 100 100" fill="none">
+    <ellipse cx="50" cy="55" rx="30" ry="25" fill="#93c5fd"/>
+    <circle cx="50" cy="45" r="22" fill="#dbeafe"/>
+    <ellipse cx="25" cy="35" rx="12" ry="7" fill="#60a5fa" transform="rotate(-20 25 35)"/>
+    <ellipse cx="75" cy="35" rx="12" ry="7" fill="#60a5fa" transform="rotate(20 75 35)"/>
+    <circle cx="43" cy="43" r="3" fill="#1e293b"/>
+    <circle cx="57" cy="43" r="3" fill="#1e293b"/>
+    <circle cx="38" cy="48" r="4" fill="#f472b6" opacity=".6"/>
+    <circle cx="62" cy="48" r="4" fill="#f472b6" opacity=".6"/>
+    <circle cx="50" cy="47" r="2" fill="#3b82f6"/>
+</svg>
+
+<!-- BEAR -->
+<svg id="char-bear" class="cartoon-character" viewBox="0 0 100 100" fill="none">
+    <circle cx="30" cy="30" r="12" fill="#3b82f6"/>
+    <circle cx="30" cy="30" r="6" fill="#bfdbfe"/>
+    <circle cx="70" cy="30" r="12" fill="#3b82f6"/>
+    <circle cx="70" cy="30" r="6" fill="#bfdbfe"/>
+    <circle cx="50" cy="50" r="30" fill="#60a5fa"/>
+    <ellipse cx="50" cy="56" rx="12" ry="9" fill="#dbeafe"/>
+    <ellipse cx="50" cy="52" rx="4" ry="3" fill="#1e3a8a"/>
+    <circle cx="40" cy="45" r="3.5" fill="#0f172a"/>
+    <circle cx="60" cy="45" r="3.5" fill="#0f172a"/>
+    <circle cx="41" cy="44" r="1" fill="white"/>
+    <circle cx="61" cy="44" r="1" fill="white"/>
+</svg>
+
+<!-- CAT -->
+<svg id="char-cat" class="cartoon-character" viewBox="0 0 100 100" fill="none">
+    <path d="M25 25 L35 45 L15 45 Z" fill="#3b82f6"/>
+    <path d="M75 25 L85 45 L65 45 Z" fill="#3b82f6"/>
+    <circle cx="50" cy="55" r="28" fill="#60a5fa"/>
+    <ellipse cx="50" cy="62" rx="14" ry="10" fill="#dbeafe"/>
+    <circle cx="40" cy="50" r="3" fill="#0f172a"/>
+    <circle cx="60" cy="50" r="3" fill="#0f172a"/>
+    <polygon points="50,56 46,52 54,52" fill="#1e3a8a"/>
+    <circle cx="33" cy="56" r="3.5" fill="#f472b6" opacity=".6"/>
+    <circle cx="67" cy="56" r="3.5" fill="#f472b6" opacity=".6"/>
+</svg>
+
+<!-- BUNNY -->
+<svg id="char-bunny" class="cartoon-character" viewBox="0 0 100 100" fill="none">
+    <ellipse cx="38" cy="25" rx="8" ry="22" fill="#93c5fd"/>
+    <ellipse cx="62" cy="25" rx="8" ry="22" fill="#93c5fd"/>
+    <ellipse cx="38" cy="25" rx="4" ry="15" fill="#f472b6" opacity=".7"/>
+    <ellipse cx="62" cy="25" rx="4" ry="15" fill="#f472b6" opacity=".7"/>
+    <circle cx="50" cy="55" r="26" fill="#dbeafe"/>
+    <circle cx="42" cy="50" r="3" fill="#1e293b"/>
+    <circle cx="58" cy="50" r="3" fill="#1e293b"/>
+    <polygon points="50,56 47,53 53,53" fill="#f472b6"/>
+    <circle cx="36" cy="55" r="4" fill="#f472b6" opacity=".5"/>
+    <circle cx="64" cy="55" r="4" fill="#f472b6" opacity=".5"/>
+</svg>
+
+<!-- STAR -->
+<svg id="char-star" class="cartoon-character" viewBox="0 0 100 100" fill="none">
+    <polygon points="50,10 63,38 93,38 68,56 78,86 50,68 22,86 32,56 7,38 37,38" fill="#60a5fa"/>
+    <polygon points="50,18 60,40 85,40 64,54 72,78 50,63 28,78 36,54 15,40 40,40" fill="#93c5fd"/>
+    <circle cx="43" cy="46" r="3" fill="#1e293b"/>
+    <circle cx="57" cy="46" r="3" fill="#1e293b"/>
+    <path d="M46 54 Q50 58 54 54" stroke="#1e293b" stroke-width="2" stroke-linecap="round" fill="none"/>
+</svg>
+
+<!-- GREETING -->
+<div id="greeting-screen" class="content-screen">
+
+    <div class="greeting-container">
+
+        <h1>Happy Birthday, Jhurine! 🎉</h1>
+
+        <p>
+            Wishing you an amazing year ahead filled with happiness,
+            success, and wonderful memories!
+        </p>
+
+        <div class="dots-loader">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- PASSWORD -->
+<div id="password-screen" class="content-screen">
+
+    <div class="password-card" id="pwd-card">
+
+        <span class="lock-icon">💙</span>
+
+        <h2>Secret Passcode</h2>
+
+        <p>
+            Enter the code to unlock the secret message!
+        </p>
+
+        <div class="input-group">
+
+            <input
+                type="password"
+                id="passcode-input"
+                class="pwd-input"
+                placeholder="••••••"
+                autocomplete="off"
+            >
+
+            <button id="unlock-btn" class="pwd-btn">
+                Unlock ✨
+            </button>
+
+        </div>
+
+        <div id="error-msg"></div>
+
+    </div>
+
+    <!-- ENVELOPE -->
+    <div id="envelope" class="envelope-wrapper">
+
+        <div class="envelope-flap"></div>
+
+        <div class="heart-seal">💌</div>
+
+        <div class="envelope-pocket"></div>
+
+        <div class="vintage-paper" id="vintage-paper">
+
+            <div id="paper-text" class="paper-content">
+
+                <div id="letter-pages">
+
+                    <div class="letter-page" data-page="0">
+Dearest Jhurine,
+
+It's funny right? I did create another website for you! Two is better than one, boys like girls believe it right?
+                    </div>
+
+                    <div class="letter-page" data-page="1">
+Actually, I did created another website for a formal one. My last mesage for you was a casual message so I created another one :)
+                    </div>
+
+                    <div class="letter-page" data-page="2">
+First of all, thank you for becoming my friend. JM, I know you're too shy to open up to strangers. And sspeaking of strangers, we started from being strangers with no information between us, not until the day that we became close to each other. JM, I would like you to know that you are the one who made me feel someone is there for me. Even for hours of talking, you're there who made me realized that my time is precious from the person I met online.
+                    </div>
+
+                    <div class="letter-page" data-page="3">
+You're the person that I've met on the internet who became my bestfriend. You already know that I don't have enough friends in real life, but you are so special because you mad emy internet life a meaningful and memorable.
+                    </div>
+
+                    <div class="letter-page" data-page="4">
+JM, I like the way you interact to people who you don't even know. You're so calm, cool and soft person, who always forgive on any mistakes. At first, I find it ugly for a person online, but you're different. Different in a way that you're not just to get away from any arguments or to be a toxic one but it's just you. You are a person who give his all patience to someone, you have a lot of empathy which really amazes me.
+                    </div>
+
+                    <div class="letter-page" data-page="5">
+We just have known each other for months, and yet we still haven't met but that's alright because I know you do also have your own problems and you're too busy from your academics.
+                    </div>
+
+                    <div class="letter-page" data-page="6">
+Speaking of academics, I know for sure, before you graduated from high school, you'll get that with high honor which is I know you can do it. You're so hardworking, focused on your studies and smart.
+                    </div>
+
+                    <div class="letter-page" data-page="7">
+With love,
+
+Marth Hale
+                    </div>
+
+                </div>
+
+                <div class="letter-navigation">
+
+                    <div id="tap-indicator" class="tap-indicator">
+                        <span class="tap-hand">👆</span>
+                        <span>Click Next to continue</span>
+                    </div>
+
+                    <div class="page-counter" id="page-counter">
+                        1 / 8
+                    </div>
+
+                    <button
+                        id="next-letter-btn"
+                        class="next-letter-btn"
+                        type="button"
+                    >
+                        Next <span>→</span>
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="paper-footer-controls">
+
+                <button
+                    id="admin-save-btn"
+                    class="action-btn"
+                    style="display:none"
+                >
+                    💾 Save Letter
+                </button>
+
+                <div class="wax-seal">
+                    J
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+/* ==========================================
+   ELEMENTS
+========================================== */
+
+const playBtn =
+    document.getElementById('play-btn');
+
+const bgMusic =
+    document.getElementById('bg-music');
+
+const watermark =
+    document.getElementById('watermark');
+
+const koreanContainer =
+    document.getElementById('korean-container');
+
+const waveCanvas =
+    document.getElementById('wave-canvas');
+
+const ctxWave =
+    waveCanvas.getContext('2d');
+
+const greetingScreen =
+    document.getElementById('greeting-screen');
+
+const passwordScreen =
+    document.getElementById('password-screen');
+
+const pwdCard =
+    document.getElementById('pwd-card');
+
+const passcodeInput =
+    document.getElementById('passcode-input');
+
+const unlockBtn =
+    document.getElementById('unlock-btn');
+
+const errorMsg =
+    document.getElementById('error-msg');
+
+const envelope =
+    document.getElementById('envelope');
+
+const vintagePaper =
+    document.getElementById('vintage-paper');
+
+const paperText =
+    document.getElementById('paper-text');
+
+const adminSaveBtn =
+    document.getElementById('admin-save-btn');
+
+const letterPages =
+    document.querySelectorAll('.letter-page');
+
+const nextLetterBtn =
+    document.getElementById('next-letter-btn');
+
+const tapIndicator =
+    document.getElementById('tap-indicator');
+
+const pageCounter =
+    document.getElementById('page-counter');
+
+const backBtn =
+    document.getElementById('back-btn');
+
+
+/* ==========================================
+   SETTINGS
+========================================== */
+
+const USER_PASSCODE = "082910";
+const ADMIN_PASSCODE = "admin123";
+
+let currentLetterPage = 0;
+let letterStarted = false;
+let emberInterval = null;
+let animationStartTime = null;
+let isAnimatingWave = false;
+
+
+/* ==========================================
+   MUSIC
+========================================== */
+
+bgMusic.volume = 0.5;
+
+function startMusic(){
+    bgMusic.volume = 0.5;
+    const playPromise = bgMusic.play();
+    
+    if (playPromise !== undefined) {
+        playPromise.catch(error => {
+            console.log("Autoplay prevented or music error:", error);
+        });
+    }
+}
+
+
+/* ==========================================
+   SAVED LETTER
+========================================== */
+
+const savedLetter =
+    localStorage.getItem(
+        'jhurine_letter_content_v2'
+    );
+
+if(savedLetter){
+
+    const savedParagraphs =
+        savedLetter
+        .split(/\n\s*\n/)
+        .map(p=>p.trim())
+        .filter(Boolean);
+
+    if(
+        savedParagraphs.length ===
+        letterPages.length
+    ){
+
+        letterPages.forEach(
+            (page,i)=>{
+                page.textContent =
+                    savedParagraphs[i];
+            }
+        );
+
+    }
+
+}
+
+
+/* ==========================================
+   CANVAS
+========================================== */
+
+function resizeCanvas(){
+
+    waveCanvas.width =
+        window.innerWidth;
+
+    waveCanvas.height =
+        window.innerHeight;
+
+}
+
+window.addEventListener(
+    'resize',
+    resizeCanvas
+);
+
+resizeCanvas();
+
+
+/* ==========================================
+   KOREAN WORDS
+========================================== */
+
+const koreanWords = [
+
+    "생일 축하해",
+    "행복하세요",
+    "소중한 친구",
+    "축하해요",
+    "좋은 하루",
+    "미소",
+    "기쁨",
+    "추억",
+    "늘 고마워",
+    "꽃길만 걷자",
+    "사랑해요",
+    "희망",
+    "꿈",
+    "빛나는 날",
+    "행운을 빌어요"
+
+];
+
+function spawnKoreanWord(){
+
+    const el =
+        document.createElement('span');
+
+    el.className =
+        'korean-word';
+
+    el.textContent =
+        koreanWords[
+            Math.floor(
+                Math.random() *
+                koreanWords.length
+            )
+        ];
+
+    el.style.left =
+        Math.random()*90 + "%";
+
+    el.style.top =
+        Math.random()*90 + "%";
+
+    el.style.fontSize =
+        Math.floor(
+            Math.random()*24+18
+        ) + "px";
+
+    koreanContainer.appendChild(el);
+
+    setTimeout(()=>{
+        el.remove();
+    },5000);
+
+}
+
+
+/* ==========================================
+   EMBERS
+========================================== */
+
+function spawnEmber(){
+
+    if(
+        !envelope.classList.contains('open')
+    ){
+        return;
+    }
+
+    const ember =
+        document.createElement('div');
+
+    ember.className =
+        'ember';
+
+    const rect =
+        vintagePaper.getBoundingClientRect();
+
+    ember.style.left =
+        rect.left +
+        Math.random()*rect.width +
+        "px";
+
+    ember.style.top =
+        rect.bottom -
+        20 -
+        Math.random()*30 +
+        "px";
+
+    ember.style.animationDelay =
+        Math.random()*.5 + "s";
+
+    document.body.appendChild(ember);
+
+    setTimeout(()=>{
+        ember.remove();
+    },4000);
+
+}
+
+
+/* ==========================================
+   DRAG CHARACTERS
+========================================== */
+
+document
+.querySelectorAll('.cartoon-character')
+.forEach(el=>{
+
+    let dragging = false;
+
+    let startX;
+    let startY;
+
+    let origX;
+    let origY;
+
+    function startDrag(e){
+
+        dragging = true;
+
+        const x =
+            e.touches
+            ? e.touches[0].clientX
+            : e.clientX;
+
+        const y =
+            e.touches
+            ? e.touches[0].clientY
+            : e.clientY;
+
+        const rect =
+            el.getBoundingClientRect();
+
+        startX = x;
+        startY = y;
+
+        origX = rect.left;
+        origY = rect.top;
+
+        el.style.animationPlayState =
+            'paused';
+
+    }
+
+    function moveDrag(e){
+
+        if(!dragging)
+            return;
+
+        const x =
+            e.touches
+            ? e.touches[0].clientX
+            : e.clientX;
+
+        const y =
+            e.touches
+            ? e.touches[0].clientY
+            : e.clientY;
+
+        el.style.left =
+            origX + x - startX + "px";
+
+        el.style.top =
+            origY + y - startY + "px";
+
+    }
+
+    function stopDrag(){
+
+        if(!dragging)
+            return;
+
+        dragging = false;
+
+        el.style.animationPlayState =
+            'running';
+
+    }
+
+    el.addEventListener(
+        'mousedown',
+        startDrag
+    );
+
+    window.addEventListener(
+        'mousemove',
+        moveDrag
+    );
+
+    window.addEventListener(
+        'mouseup',
+        stopDrag
+    );
+
+    el.addEventListener(
+        'touchstart',
+        startDrag,
+        {passive:true}
+    );
+
+    window.addEventListener(
+        'touchmove',
+        moveDrag,
+        {passive:true}
+    );
+
+    window.addEventListener(
+        'touchend',
+        stopDrag
+    );
+
+});
+
+
+/* ==========================================
+   HEART WAVE
+========================================== */
+
+function getHeartPoint(t,w,h){
+
+    const scale =
+        Math.min(w,h)/38;
+
+    const x =
+        16*Math.pow(
+            Math.sin(t),3
+        );
+
+    const y =
+        -(
+            13*Math.cos(t)
+            -5*Math.cos(2*t)
+            -2*Math.cos(3*t)
+            -Math.cos(4*t)
+        );
+
+    return{
+        x:w/2+x*scale,
+        y:h/2+y*scale+scale*2
+    };
+
+}
+
+
+function drawWaveStream(progress){
+
+    ctxWave.clearRect(
+        0,
+        0,
+        waveCanvas.width,
+        waveCanvas.height
+    );
+
+    const w =
+        waveCanvas.width;
+
+    const h =
+        waveCanvas.height;
+
+    const cy =
+        h/2;
+
+    let drawProgress;
+
+    if(progress<=.4){
+
+        drawProgress =
+            progress/.4;
+
+    }else if(progress<=.7){
+
+        drawProgress = 1;
+
+    }else{
+
+        drawProgress =
+            1 -
+            (progress-.7)/.3;
+
+    }
+
+    const totalPoints = 120;
+
+    const drawCount =
+        Math.floor(
+            totalPoints*drawProgress
+        );
+
+    ctxWave.font =
+        "20px sans-serif";
+
+    ctxWave.fillStyle =
+        "rgba(96,165,250,.9)";
+
+    ctxWave.shadowBlur = 12;
+
+    ctxWave.shadowColor =
+        "rgba(37,99,235,.9)";
+
+    for(
+        let i=0;
+        i<drawCount;
+        i++
+    ){
+
+        const p =
+            i/totalPoints;
+
+        let x;
+        let y;
+
+        if(p<.5){
+
+            const lineP =
+                p/.5;
+
+            x =
+                w/2*lineP;
+
+            y =
+                cy+
+                Math.sin(
+                    lineP*12+
+                    progress*10
+                )*25;
+
+        }else{
+
+            const heartP =
+                (p-.5)/.5;
+
+            const pt =
+                getHeartPoint(
+                    Math.PI-
+                    heartP*Math.PI,
+                    w,
+                    h
+                );
+
+            x = pt.x;
+
+            y =
+                pt.y+
+                Math.sin(
+                    heartP*8+
+                    progress*10
+                )*5;
+
+        }
+
+        ctxWave.fillText(
+            "~",
+            x,
+            y
+        );
+
+    }
+
+    for(
+        let i=0;
+        i<drawCount;
+        i++
+    ){
+
+        const p =
+            i/totalPoints;
+
+        let x;
+        let y;
+
+        if(p<.5){
+
+            const lineP =
+                p/.5;
+
+            x =
+                w-
+                w/2*lineP;
+
+            y =
+                cy+
+                Math.sin(
+                    lineP*12+
+                    progress*10
+                )*25;
+
+        }else{
+
+            const heartP =
+                (p-.5)/.5;
+
+            const pt =
+                getHeartPoint(
+                    Math.PI+
+                    heartP*Math.PI,
+                    w,
+                    h
+                );
+
+            x = pt.x;
+
+            y =
+                pt.y+
+                Math.sin(
+                    heartP*8+
+                    progress*10
+                )*5;
+
+        }
+
+        ctxWave.fillText(
+            "~",
+            x,
+            y
+        );
+
+    }
+
+}
+
+
+function animateWaves(timestamp){
+
+    if(!animationStartTime)
+        animationStartTime =
+            timestamp;
+
+    const elapsed =
+        timestamp-
+        animationStartTime;
+
+    const progress =
+        Math.min(
+            elapsed/6500,
+            1
+        );
+
+    drawWaveStream(progress);
+
+    if(progress<1){
+
+        requestAnimationFrame(
+            animateWaves
+        );
+
+    }else{
+
+        ctxWave.clearRect(
+            0,
+            0,
+            waveCanvas.width,
+            waveCanvas.height
+        );
+
+        isAnimatingWave = false;
+
+    }
+
+}
+
+
+/* ==========================================
+   GREETING FLOW
+========================================== */
+
+function startTransitionFlow(){
+
+    greetingScreen.classList.add(
+        'active'
+    );
+
+    setTimeout(()=>{
+
+        greetingScreen.classList.remove(
+            'active'
+        );
+
+        greetingScreen.classList.add(
+            'fade-out'
+        );
+
+        setTimeout(()=>{
+
+            passwordScreen.classList.add(
+                'active'
+            );
+
+            passcodeInput.focus();
+
+        },800);
+
+    },4500);
+
+}
+
+
+/* ==========================================
+   LETTER NAVIGATION
+========================================== */
+
+function showLetterPage(index){
+
+    if(!letterPages.length)
+        return;
+
+    index =
+        Math.max(
+            0,
+            Math.min(
+                index,
+                letterPages.length-1
+            )
+        );
+
+    letterPages.forEach(
+        (page,i)=>{
+
+            page.classList.remove(
+                'active',
+                'exit-left'
+            );
+
+            if(i<index){
+
+                page.classList.add(
+                    'exit-left'
+                );
+
+            }
+
+        }
+    );
+
+    letterPages[index]
+        .classList.add('active');
+
+    currentLetterPage =
+        index;
+
+    pageCounter.textContent =
+        `${index+1} / ${letterPages.length}`;
+
+    if(
+        index ===
+        letterPages.length-1
+    ){
+
+        nextLetterBtn.innerHTML =
+            'Finish <span>✓</span>';
+
+        nextLetterBtn.classList.add(
+            'finished'
+        );
+
+        tapIndicator.innerHTML =
+            '<span class="tap-hand">✨</span>' +
+            '<span>End of the letter</span>';
+
+    }else{
+
+        nextLetterBtn.innerHTML =
+            'Next <span>→</span>';
+
+        nextLetterBtn.classList.remove(
+            'finished'
+        );
+
+        tapIndicator.innerHTML =
+            '<span class="tap-hand">👆</span>' +
+            '<span>Click Next to continue</span>';
+
+    }
+
+}
+
+
+function nextLetterPage(){
+
+    if(
+        currentLetterPage <
+        letterPages.length-1
+    ){
+
+        showLetterPage(
+            currentLetterPage+1
+        );
+
+    }else{
+
+        tapIndicator.innerHTML =
+            '<span class="tap-hand">💙</span>' +
+            '<span>Thank you for reading!</span>';
+
+        nextLetterBtn.innerHTML =
+            'Read again ↺';
+
+        setTimeout(()=>{
+
+            currentLetterPage = 0;
+
+            showLetterPage(0);
+
+        },1200);
+
+    }
+
+}
+
+
+function startLetterViewer(){
+
+    currentLetterPage = 0;
+
+    letterStarted = true;
+
+    showLetterPage(0);
+
+}
+
+
+nextLetterBtn.addEventListener(
+    'click',
+    e=>{
+
+        e.stopPropagation();
+
+        nextLetterPage();
+
+    }
+);
+
+startLetterViewer();
+
+
+/* ==========================================
+   PASSWORD
+========================================== */
+
+function checkPasscode(){
+
+    const entered =
+        passcodeInput.value.trim();
+
+    if(
+        entered === USER_PASSCODE ||
+        entered === ADMIN_PASSCODE
+    ){
+
+        errorMsg.textContent = "";
+
+        if(
+            entered === ADMIN_PASSCODE
+        ){
+
+            paperText.contentEditable =
+                "true";
+
+            adminSaveBtn.style.display =
+                "inline-block";
+
+        }else{
+
+            paperText.contentEditable =
+                "false";
+
+            adminSaveBtn.style.display =
+                "none";
+
+        }
+
+        pwdCard.style.transition =
+            "transform .5s ease,opacity .5s ease";
+
+        pwdCard.style.transform =
+            "scale(.8)";
+
+        pwdCard.style.opacity =
+            "0";
+
+        setTimeout(()=>{
+
+            pwdCard.style.display =
+                "none";
+
+            envelope.classList.add(
+                "active"
+            );
+
+            setTimeout(()=>{
+
+                envelope.classList.add(
+                    "open"
+                );
+
+                backBtn.style.display =
+                    "flex";
+
+                if(!emberInterval){
+
+                    emberInterval =
+                        setInterval(
+                            spawnEmber,
+                            350
+                        );
+
+                }
+
+            },600);
+
+        },500);
+
+    }else{
+
+        errorMsg.textContent =
+            "Wrong passcode! Try again 🔒";
+
+        pwdCard.classList.remove(
+            "shake"
+        );
+
+        void pwdCard.offsetWidth;
+
+        pwdCard.classList.add(
+            "shake"
+        );
+
+        passcodeInput.value = "";
+
+        passcodeInput.focus();
+
+    }
+
+}
+
+
+/* ==========================================
+   BACK BUTTON
+========================================== */
+
+backBtn.addEventListener(
+    'click',
+    e=>{
+
+        e.stopPropagation();
+
+        backBtn.style.display =
+            "none";
+
+        envelope.classList.remove(
+            "open"
+        );
+
+        if(emberInterval){
+
+            clearInterval(
+                emberInterval
+            );
+
+            emberInterval = null;
+
+        }
+
+        setTimeout(()=>{
+
+            envelope.classList.remove(
+                "active"
+            );
+
+            pwdCard.style.display =
+                "block";
+
+            setTimeout(()=>{
+
+                pwdCard.style.transform =
+                    "scale(1)";
+
+                pwdCard.style.opacity =
+                    "1";
+
+                passcodeInput.value =
+                    "";
+
+                passcodeInput.focus();
+
+            },100);
+
+        },500);
+
+    }
+);
+
+
+/* ==========================================
+   ADMIN SAVE
+========================================== */
+
+adminSaveBtn.addEventListener(
+    'click',
+    e=>{
+
+        e.stopPropagation();
+
+        const updatedContent =
+            [...letterPages]
+            .map(
+                page =>
+                    page.textContent.trim()
+            )
+            .join('\n\n');
+
+        localStorage.setItem(
+            'jhurine_letter_content_v2',
+            updatedContent
+        );
+
+        alert(
+            "Letter saved! 💙"
+        );
+
+    }
+);
+
+
+/* ==========================================
+   UNLOCK
+========================================== */
+
+unlockBtn.addEventListener(
+    'click',
+    checkPasscode
+);
+
+passcodeInput.addEventListener(
+    'keypress',
+    e=>{
+
+        if(e.key === 'Enter')
+            checkPasscode();
+
+    }
+);
+
+
+/* ==========================================
+   PLAY BUTTON
+========================================== */
+
+playBtn.addEventListener(
+    'click',
+    ()=>{
+
+        /* START THE BACKGROUND MUSIC */
+        startMusic();
+
+        playBtn.style.opacity =
+            '0';
+
+        setTimeout(()=>{
+
+            playBtn.style.display =
+                'none';
+
+        },500);
+
+        setInterval(
+            spawnKoreanWord,
+            300
+        );
+
+        if(!isAnimatingWave){
+
+            isAnimatingWave = true;
+
+            animationStartTime = null;
+
+            requestAnimationFrame(
+                animateWaves
+            );
+
+        }
+
+        watermark.classList.add(
+            'fade-in'
+        );
+
+        setTimeout(()=>{
+
+            watermark.classList.remove(
+                'fade-in'
+            );
+
+            watermark.classList.add(
+                'bounce-out'
+            );
+
+        },3200);
+
+        setTimeout(()=>{
+
+            startTransitionFlow();
+
+        },500);
+
+    }
+);
+
+</script>
+
+</body>
+</html>
