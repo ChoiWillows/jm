@@ -3,61 +3,85 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Happy Birthday!</title>
+  <title>For Jhurine 💙</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
+    * {
+      box-sizing: border-box;
       margin: 0;
-      background-color: #f0f4f8;
-      color: #333;
+      padding: 0;
     }
 
-    .container {
-      text-align: center;
-      padding: 20px;
-      background: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    body {
+      background-color: #0b132b;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow: hidden;
+      position: relative;
     }
 
-    button {
-      padding: 12px 24px;
-      font-size: 16px;
+    /* Floating background icons */
+    .icon {
+      position: absolute;
+      font-size: 2rem;
+      user-select: none;
+      animation: float 6s ease-in-out infinite alternate;
+    }
+
+    .icon-1 { top: 15%; left: 10%; animation-delay: 0s; }
+    .icon-2 { top: 25%; right: 12%; animation-delay: 1.5s; }
+    .icon-3 { bottom: 35%; left: 5%; animation-delay: 3s; }
+    .icon-4 { bottom: 15%; left: 12%; animation-delay: 0.8s; }
+    .icon-5 { bottom: 20%; right: 10%; animation-delay: 2.2s; }
+
+    @keyframes float {
+      0% { transform: translateY(0px) rotate(0deg); }
+      100% { transform: translateY(-15px) rotate(8deg); }
+    }
+
+    /* Styled Play Button */
+    .play-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #7209b7;
+      padding: 12px 32px;
+      font-size: 1.1rem;
       font-weight: bold;
-      color: #ffffff;
-      background-color: #007bff;
-      border: none;
-      border-radius: 8px;
+      border-radius: 25px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
-      margin-top: 15px;
+      box-shadow: 0 0 15px rgba(67, 97, 238, 0.4);
+      transition: all 0.3s ease;
+      color: #4cc9f0;
+      backdrop-filter: blur(5px);
+      z-index: 10;
     }
 
-    button:hover {
-      background-color: #0056b3;
+    .play-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(76, 201, 240, 0.8);
+      background: rgba(255, 255, 255, 0.1);
     }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <h1>Happy Birthday! 🎉</h1>
-    <p>Click below to play the background music:</p>
+  <!-- Background Decorative Icons -->
+  <div class="icon icon-1">🐻</div>
+  <div class="icon icon-2">🧸</div>
+  <div class="icon icon-3">⭐</div>
+  <div class="icon icon-4">🍬</div>
+  <div class="icon icon-5">🐰</div>
 
-    <!-- Audio Element -->
-    <audio id="bgMusic" loop preload="auto">
-      <source src="yung_kai_blue_official_music_video.mp3" type="audio/mpeg">
-      Your browser does not support the audio element.
-    </audio>
+  <!-- Audio Element -->
+  <audio id="bgMusic" loop preload="auto">
+    <source src="yung_kai_blue_official_music_video.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
 
-    <!-- Music Control Button -->
-    <button id="playBtn" onclick="toggleAudio()">Play Music 🎵</button>
-  </div>
+  <!-- Control Button -->
+  <button id="playBtn" class="play-btn" onclick="toggleAudio()">► Play</button>
 
   <script>
     function toggleAudio() {
@@ -65,11 +89,14 @@
       const btn = document.getElementById("playBtn");
 
       if (music.paused) {
-        music.play();
-        btn.innerText = "Pause Music ⏸️";
+        music.play().then(() => {
+          btn.innerText = "❚❚ Pause";
+        }).catch(error => {
+          console.log("Playback failed:", error);
+        });
       } else {
         music.pause();
-        btn.innerText = "Play Music 🎵";
+        btn.innerText = "► Play";
       }
     }
   </script>
