@@ -798,8 +798,8 @@ body:before{
 
 <body>
 
-<!-- BACKGROUND MUSIC SOURCE -->
-<audio id="bg-music" src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3" preload="auto" loop></audio>
+<!-- BACKGROUND MUSIC SOURCE (YUNG KAI - BLUE) -->
+<audio id="bg-music" src="https://raw.githubusercontent.com/yungkai-blue/audio/main/blue.mp3" preload="auto" loop></audio>
 
 <button id="back-btn" class="top-left-back-btn">
     🔙 Back to Password
@@ -1063,7 +1063,7 @@ const passwordScreen =
 const pwdCard =
     document.getElementById('pwd-card');
 
-const passcodeInput =
+const passcodeInputs =
     document.getElementById('passcode-input');
 
 const unlockBtn =
@@ -1679,7 +1679,7 @@ function startTransitionFlow(){
                 'active'
             );
 
-            passcodeInput.focus();
+            passcodeInputs.focus();
 
         },800);
 
@@ -1833,7 +1833,7 @@ startLetterViewer();
 function checkPasscode(){
 
     const entered =
-        passcodeInput.value.trim();
+        passcodeInputs.value.trim();
 
     if(
         entered === USER_PASSCODE ||
@@ -1918,9 +1918,9 @@ function checkPasscode(){
             "shake"
         );
 
-        passcodeInput.value = "";
+        passcodeInputs.value = "";
 
-        passcodeInput.focus();
+        passcodeInputs.focus();
 
     }
 
@@ -1971,10 +1971,10 @@ backBtn.addEventListener(
                 pwdCard.style.opacity =
                     "1";
 
-                passcodeInput.value =
+                passcodeInputs.value =
                     "";
 
-                passcodeInput.focus();
+                passcodeInputs.focus();
 
             },100);
 
@@ -2024,7 +2024,7 @@ unlockBtn.addEventListener(
     checkPasscode
 );
 
-passcodeInput.addEventListener(
+passcodeInputs.addEventListener(
     'keypress',
     e=>{
 
